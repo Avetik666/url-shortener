@@ -2,6 +2,6 @@ import { IsString, Length } from 'class-validator';
 
 export class GetUrlDto {
   @IsString()
-  @Length(6, 6, { message: 'Short code must be exactly 6 characters' })
+  @Length(8, 8, { message: 'Short code must be exactly 8 characters' })
   shortCode: string;
 }

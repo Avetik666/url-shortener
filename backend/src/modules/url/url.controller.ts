@@ -1,7 +1,16 @@
-import { Controller, Post, Body, Get, Param, NotFoundException, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  NotFoundException,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UrlService } from './url.service';
-import { CreateUrlDto } from "./dto/create-url.dto";
-import { GetUrlDto } from "./dto/get-url.dto";
+import { CreateUrlDto } from './dto/create-url.dto';
+import { GetUrlDto } from './dto/get-url.dto';
 
 @Controller('url')
 export class UrlController {
@@ -18,11 +27,10 @@ export class UrlController {
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async redirectToOriginal(@Param() params: GetUrlDto) {
     const { shortCode } = params;
-    const url = this.urlService.findOriginalUrl(shortCode);
+    const url = await this.urlService.findOriginalUrl(shortCode);
     if (!url) {
       throw new NotFoundException('Short URL not found');
     }
-
     return url;
   }
 }
