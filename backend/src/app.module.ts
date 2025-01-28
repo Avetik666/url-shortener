@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UrlModule } from './modules/url/url.module';
-import Joi from "joi";
+import * as Joi from "joi";
 
 @Module({
   imports: [
