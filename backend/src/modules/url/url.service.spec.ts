@@ -14,7 +14,7 @@ describe('UrlService', () => {
     save: jest.fn(),
   };
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     process.env.MAX_RETRY_ATTEMPTS = '3';
 
     const module: TestingModule = await Test.createTestingModule({

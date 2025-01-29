@@ -4,6 +4,7 @@ import UrlShortenerForm from './components/UrlShortenerForm';
 import ShortenedUrlDisplay from './components/ShortenedUrlDisplay';
 import { createShortUrl } from './api/urlService';
 import Redirect from './pages/Redirect';
+import NotFound from './pages/NotFound';
 
 const App = () => {
   const [shortenedUrl, setShortenedUrl] = useState<string | null>(null);
@@ -36,6 +37,7 @@ const App = () => {
           }
         />
         <Route path="/:shortCode" element={<Redirect />} />
+        <Route path="*" element={<NotFound />} /> {/* Handle invalid URLs */}
       </Routes>
     </Router>
   );

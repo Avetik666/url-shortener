@@ -8,6 +8,8 @@ import {
   ValidationPipe,
   BadRequestException,
 } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 describe('UrlController', () => {
   let controller: UrlController;
@@ -18,14 +20,36 @@ describe('UrlController', () => {
     findOriginalUrl: jest.fn(),
   };
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        ThrottlerModule.forRoot([
+          {
+            ttl: 60000,
+            limit: 30,
+          },
+        ]),
+      ],
       controllers: [UrlController],
-      providers: [{ provide: UrlService, useValue: mockUrlService }],
+      providers: [
+        { provide: UrlService, useValue: mockUrlService },
+        {
+          provide: APP_GUARD,
+          useClass: class MockThrottlerGuard {
+            canActivate() {
+              return true;
+            }
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<UrlController>(UrlController);
     service = module.get<UrlService>(UrlService);
+  });
+
+  afterAll(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {

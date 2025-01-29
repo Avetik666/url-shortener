@@ -1,24 +1,35 @@
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { getOriginalUrl } from '../api/urlService';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getOriginalUrl } from "../api/urlService";
 
 const Redirect = () => {
-  const { shortCode } = useParams<{ shortCode: string }>();
+  const { shortCode } = useParams();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchAndRedirect = async () => {
+    const fetchUrl = async () => {
       try {
         const data = await getOriginalUrl(shortCode!);
         window.location.href = data.originalUrl;
       } catch (err) {
-        console.error('Failed to fetch original URL or invalid short code');
+        console.error("Error fetching original URL:", err);
+        setError("Short URL not found.");
       }
     };
 
-    fetchAndRedirect();
+    fetchUrl();
   }, [shortCode]);
 
-  return <p>Redirecting...</p>;
+  if (error) {
+    return (
+      <div className="text-center mt-20">
+        <h1 className="text-2xl font-bold text-red-600">404 - Short URL Not Found</h1>
+        <p className="text-gray-500 mt-2">The URL you requested does not exist.</p>
+      </div>
+    );
+  }
+
+  return <p className="text-gray-600">Redirecting...</p>;
 };
 
 export default Redirect;
